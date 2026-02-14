@@ -1,0 +1,22 @@
+[
+  {
+    "path": "compass/Assets.xcassets/Contents.json",
+    "content": "{\n  \"info\" : {\n    \"version\" : 1,\n    \"author\" : \"xcode\"\n  }\n}---FILE_END---\n"
+  },
+  {
+    "path": "compass/Models/Location.swift",
+    "content": "//\n//  Location.swift\n//  compass\n//\n//  Created by Dhars on 2021-04-09.\n//  Copyright \u00a9 2021 Dhars. All rights reserved.\n//\n\nimport Foundation\n\nstruct Location: Codable{\n    let coordinates: [Double]?\n}\n"
+  },
+  {
+    "path": "compass/Models/Pinresponse.swift",
+    "content": "//\n//  Pinresponse.swift\n//  compass\n//\n//  Created by Dhars on 2021-04-09.\n//  Copyright \u00a9 2021 Dhars. All rights reserved.\n//\n\nimport Foundation\n\nstruct Pinresponse: Codable{\n    let success: Bool?\n    let count: Int?\n    let data: [Pin]?\n}\n"
+  },
+  {
+    "path": "compass/Models/Pin.swift",
+    "content": "//\n//  Pin.swift\n//  compass\n//\n//  Created by Dhars on 2021-04-09.\n//  Copyright \u00a9 2021 Dhars. All rights reserved.\n//\n\nimport Foundation\n\nstruct Pin: Codable{\n    let location: Location?\n    let _id: String?\n    let pinId: String?\n    let createdAt: String?\n    let __v: Int?\n}\n\n"
+  },
+  {
+    "path": "compass/LocationDelegate.swift",
+    "content": "//\n//  LocationDelegate.swift\n//  compass\n//\n//  Created by Dhars on 05/04/2017.\n//  Copyright \u00a9 2017 Dhars. All rights reserved.\n//\n\nimport Foundation\nimport CoreLocation\n\nclass LocationDelegate: NSObject, CLLocationManagerDelegate {\n  var locationCallback: ((CLLocation) -> ())? = nil\n  var headingCallback: ((CLLocationDirection) -> ())? = nil\n  \n  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {\n    guard let currentLocation = locations.last else { return }\n    guard let currentLatitude = locations.last else { return }\n//\n//    print(\" This is the latitude for your device \\(currentLatitude.coordinate.latitude) \");\n//    print(\" This is the longitude for your device \\(currentLatitude.coordinate.longitude) \");\n//\n    // PUT to update users location\n    // prepare json data\n    let json: [String: Any] = [\n        \"userId\": \"andresvidoza\",\n        \"location\": [\n            \"coordinates\": [currentLatitude.coordinate.longitude, currentLatitude.coordinate.latitude]\n        ]\n    ]\n\n    let jsonData = try? JSONSerialization.data(withJSONObject: json)\n\n    // create post request\n    let url = URL(string: \"http://192.168.2.90:5000/api/v1/user\")!\n    var request = URLRequest(url: url)\n    request.httpMethod = \"PUT\"\n    request.addValue(\"application/json\", forHTTPHeaderField: \"Content-Type\")\n\n    // insert json data to the request\n    request.httpBody = jsonData\n\n    let task = URLSession.shared.dataTask(with: request) { data, response, error in\n        guard let data = data, error == nil else {\n            print(error?.localizedDescription ?? \"No data\")\n            return\n        }\n        let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])\n        if let responseJSON = responseJSON as? [String: Any] {\n            print(responseJSON)\n        }\n    }\n\n    task.resume()\n    \n    locationCallback?(currentLocation)\n  }\n  \n  func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {\n    headingCallback?(newHeading.trueHeading)\n  }\n  \n  func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {\n    print(\"\u26a0\ufe0f Error while updating location \" + error.localizedDescription)\n  }\n}\n"
+  }
+]
