@@ -10,10 +10,6 @@ Imagine you're an explorer. **Geo App** is your digital compass and logbook. It 
 Think of it like a simplified version of Google Maps, but built by us!
 
 ### How it Works (The Story)
-Let's see the app in action:
-
-![App Screenshot 1](images/screenshot_1.png)
-![App Screenshot 2](images/screenshot_2.png)
 
 1.  **The Scout (Tracking You):**  
     When you open the app, it immediately starts acting like a scout. It looks at the GPS satellites to figure out your exact location. It doesn't just keep this secret; it constantly radios back to "Base Camp" (our Server) to say, "Hey, I'm at these coordinates right now!"
